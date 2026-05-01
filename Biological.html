@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biological Resources - FarmLog AI</title>
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        /* --- Root Variables (Same as your dashboard) --- */
+        :root {
+            --primary-color: #26a69a;
+            --secondary-color: #f9a825;
+            --dark-color: #263238;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        /* --- Top Navigation Bar (Same as your dashboard) --- */
+        .top-nav {
+            background-color: var(--dark-color);
+            color: var(--white);
+            height: var(--header-height);
+            width: 100%;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-left { display: flex; align-items: center; }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.4rem; font-weight: 600; color: var(--white);
+            text-decoration: none; margin-right: 20px; /* Reduced margin */
+        }
+        .nav-logo i { color: var(--primary-color); font-size: 1.8rem; }
+        .nav-links { list-style: none; display: flex; gap: 5px; /* Reduced gap */ }
+        .nav-links a {
+            color: #eceff1; text-decoration: none; font-size: 0.9rem; /* Slightly smaller */
+            font-weight: 400; display: flex; align-items: center;
+            gap: 8px; padding: 10px 12px; /* Smaller padding */
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a.active, 
+        .nav-links a:hover {
+            background-color: var(--primary-color);
+            color: var(--white); font-weight: 500;
+        }
+
+        /* --- Button Styles (Shared) --- */
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+        .primary-btn:hover { background-color: #2bbbad; }
+        .primary-btn i { margin-right: 8px; }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-danger-secondary {
+            background-color: transparent;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-danger-secondary:hover { background-color: #d32f2f; color: var(--white); }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            padding: 30px;
+            padding-top: calc(var(--header-height) + 30px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* --- Tab Navigation --- */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap; /* Allows tabs to wrap on small screens */
+            gap: 10px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            color: var(--dark-color);
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* --- Tab Content --- */
+        .tab-content {
+            padding-top: 10px;
+        }
+        .tab-pane {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-pane.active {
+            display: block; /* Shown when active */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Section Header (Inside each tab) --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        /* --- Data Table Style (For Seeds, Feed, Compost, etc.) --- */
+        .data-table-container {
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 600px; /* Ensures table is wide enough to show data */
+        }
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .data-table th {
+            font-weight: 600;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        .data-table td {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* --- Crop Card Grid (Re-used from crops.html) --- */
+        .crop-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .crop-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+        }
+        .crop-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .crop-card .card-header h3 { font-weight: 600; font-size: 1.4rem; }
+        .status-tag {
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .status-tag.growing { background-color: #e3f2fd; color: #1976d2; }
+        .status-tag.harvesting { background-color: #e8f5e9; color: #388e3c; }
+
+        /* --- Livestock Grid --- */
+        .livestock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .livestock-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .livestock-card .card-image {
+            background-color: var(--dark-color);
+            color: var(--primary-color);
+            font-size: 5rem;
+            display: grid;
+            place-items: center;
+            height: 150px;
+        }
+        .livestock-card .card-content {
+            padding: 20px;
+        }
+        .livestock-card h3 {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .livestock-card .tag-id {
+            color: #777;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .livestock-card .health-status {
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .health-status .fa-circle-check { color: #388e3c; }
+        .health-status .fa-circle-exclamation { color: #f9a825; }
+        .livestock-card .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.4s ease-out;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { font-size: 1.5rem; font-weight: 600; }
+        .modal-close {
+            color: #aaa;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--dark-color); }
+        .modal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { font-weight: 500; margin-bottom: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
+        }
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .nav-links a span { display: none; }
+            .nav-links a { padding: 10px; font-size: 1.2rem; }
+            .nav-logo { margin-right: 15px; }
+            .nav-links { gap: 2px; }
+            .top-nav { padding: 0 15px; }
+        }
+         @media (max-width: 768px) {
+            .nav-logo span { display: none; }
+            .main-content { padding: 15px; padding-top: calc(var(--header-height) + 15px); }
+            .page-title { font-size: 1.8rem; }
+            .tab-btn { padding: 10px 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- --- Top Navigation Bar --- -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="nav-logo">
+                <i class="fa-solid fa-tractor"></i>
+                <span>FarmLog AI</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="homepage.html"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></a></li>
+                <!-- Set "Biological" as the active page -->
+                <li><a href="Biological.html" class="active"><i class="fa-solid fa-leaf"></i> <span>Biological</span></a></li>
+                <li><a href="physical.html"><i class="fa-solid fa-tractor"></i> <span>Physical</span></a></li>
+                 <li><a href="natural.html"><i class="fa-solid fa-tractor"></i> <span>Naturalal</span></a></li>
+                <li><a href="financial.html"><i class="fa-solid fa-coins"></i> <span>Financial</span></a></li>
+                <li><a href="human.html"><i class="fa-solid fa-users"></i> <span>Human</span></a></li>
+                <li><a href="material.html"><i class="fa-solid fa-flask-vial"></i> <span>Material</span></a></li>
+                <li><a href="digital.html"><i class="fa-solid fa-laptop-code"></i> <span>Digital</span></a></li>
+                <li><a href="energy.html"><i class="fa-solid fa-solar-panel"></i> <span>Energy</span></a></li>
+            </ul>
+        </div>
+       
+    </nav>
+
+    <!-- --- Main Content --- -->
+    <main class="main-content">
+
+        <h1 class="page-title">Biological Resources</h1>
+
+        <!-- --- Tab Navigation --- -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="seeds">
+                <i class="fa-solid fa-seedling"></i> Seeds
+            </button>
+            <button class="tab-btn" data-tab="crops">
+                <i class="fa-solid fa-wheat-awn"></i> Crops
+            </button>
+            <button class="tab-btn" data-tab="livestock">
+                <i class="fa-solid fa-cow"></i> Livestock
+            </button>
+            <button class="tab-btn" data-tab="feed">
+                <i class="fa-solid fa-carrot"></i> Fodder & Feed
+            </button>
+            <button class="tab-btn" data-tab="compost">
+                <i class="fa-solid fa-recycle"></i> Manure & Compost
+            </button>
+            <button class="tab-btn" data-tab="beneficials">
+                <i class="fa-solid fa-bug"></i> Beneficials
+            </button>
+        </nav>
+
+        <!-- --- Tab Content Container --- -->
+        <div class="tab-content">
+
+            <!-- ======================= Tab 1: Seeds ======================= -->
+            <div id="seeds" class="tab-pane active">
+                <div class="section-header">
+                    <h2>Seed Inventory</h2>
+                    <button class="primary-btn" id="addSeedBtn"><i class="fa-solid fa-plus"></i> Add New Seed Batch</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Seed Name</th>
+                                <th>Variety</th>
+                                <th>Quantity</th>
+                                <th>Storage Location</th>
+                                <th>Purchase Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="seedsTableBody">
+                            <tr>
+                                <td>Tomato</td>
+                                <td>Roma VF</td>
+                                <td>2.5 kg</td>
+                                <td>Cool Storage - Shelf 3</td>
+                                <td>Oct 15, 2025</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Wheat</td>
+                                <td>Sonalika</td>
+                                <td>150 kg</td>
+                                <td>Main Barn - Bin 2</td>
+                                <td>Sep 30, 2025</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Corn</td>
+                                <td>Sweet Hybrid</td>
+                                <td>10 kg</td>
+                                <td>Cool Storage - Shelf 4</td>
+                                <td>Oct 05, 2025</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 2: Crops ======================= -->
+            <div id="crops" class="tab-pane">
+                <div class="section-header">
+                    <h2>Current Crops</h2>
+                    <button class="primary-btn" id="addCropBtn"><i class="fa-solid fa-plus"></i> Add New Crop Planting</button>
+                </div>
+                <!-- This section re-uses the crop card design for consistency -->
+                <div class="crop-grid" id="cropsGrid">
+                    <div class="crop-card" data-crop-name="Tomato (Roma)" data-status="growing">
+                        <div class="card-header">
+                            <h3>Tomato (Roma)</h3>
+                            <span class="status-tag growing">Growing</span>
+                        </div>
+                        <!-- ... other crop card content ... -->
+                    </div>
+                    <div class="crop-card" data-crop-name="Wheat (Sonalika)" data-status="harvesting">
+                        <div class="card-header">
+                            <h3>Wheat (Sonalika)</h3>
+                            <span class="status-tag harvesting">Harvesting</span>
+                        </div>
+                        <!-- ... other crop card content ... -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 3: Livestock ======================= -->
+            <div id="livestock" class="tab-pane">
+                <div class="section-header">
+                    <h2>Livestock Herd</h2>
+                    <button class="primary-btn" id="addLivestockBtn"><i class="fa-solid fa-plus"></i> Add New Animal</button>
+                </div>
+                <div class="livestock-grid" id="livestockGrid">
+                    <!-- Livestock Card 1 -->
+                    <div class="livestock-card">
+                        <div class="card-image"><i class="fa-solid fa-cow"></i></div>
+                        <div class="card-content">
+                            <h3>Holstein Cow</h3>
+                            <p class="tag-id">Tag ID: #0072</p>
+                            <p class="health-status">
+                                <i class="fa-solid fa-circle-check"></i> Health: Good
+                            </p>
+                            <div class="card-actions">
+                                <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Livestock Card 2 -->
+                    <div class="livestock-card">
+                        <div class="card-image"><i class="fa-solid fa-cow"></i></div>
+                        <div class="card-content">
+                            <h3>Jersey Cow</h3>
+                            <p class="tag-id">Tag ID: #0034</p>
+                            <p class="health-status">
+                                <i class="fa-solid fa-circle-exclamation"></i> Health: Monitor
+                            </p>
+                            <div class="card-actions">
+                                <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Livestock Card 3 -->
+                    <div class="livestock-card">
+                        <div class="card-image"><i class="fa-solid fa-goat"></i></div>
+                        <div class="card-content">
+                            <h3>Boer Goat</h3>
+                            <p class="tag-id">Tag ID: #G-012</p>
+                            <p class="health-status">
+                                <i class="fa-solid fa-circle-check"></i> Health: Good
+                            </p>
+                            <div class="card-actions">
+                                <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 4: Fodder & Feed ======================= -->
+            <div id="feed" class="tab-pane">
+                <div class="section-header">
+                    <h2>Fodder & Feed Inventory</h2>
+                    <button class="primary-btn" id="addFeedBtn"><i class="fa-solid fa-plus"></i> Add Feed Stock</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Feed Type</th>
+                                <th>Quantity</th>
+                                <th>Storage Location</th>
+                                <th>Last Stocked</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedTableBody">
+                            <tr>
+                                <td>Alfalfa Hay</td>
+                                <td>200 Bales</td>
+                                <td>Hay Barn - Bay 1</td>
+                                <td>Oct 20, 2025</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cattle Feed (16% Protein)</td>
+                                <td>12 Bags (50kg)</td>
+                                <td>Feed Shed</td>
+                                <td>Oct 25, 2025</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 5: Manure & Compost ======================= -->
+            <div id="compost" class="tab-pane">
+                <div class="section-header">
+                    <h2>Manure & Compost Piles</h2>
+                    <button class="primary-btn" id="addCompostBtn"><i class="fa-solid fa-plus"></i> Log New Pile</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Est. Quantity (m³)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compostTableBody">
+                            <tr>
+                                <td>Cow Manure</td>
+                                <td>Pile A (Next to barn)</td>
+                                <td>Curing (3/6 mos)</td>
+                                <td>15 m³</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vermicompost</td>
+                                <td>Bin 1</td>
+                                <td>Ready to Use</td>
+                                <td>2 m³</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 6: Beneficials ======================= -->
+            <div id="beneficials" class="tab-pane">
+                <div class="section-header">
+                    <h2>Beneficials Log</h2>
+                    <button class="primary-btn" id="addBeneficialBtn"><i class="fa-solid fa-plus"></i> Log Observation</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Observation Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="beneficialsTableBody">
+                            <tr>
+                                <td>Oct 22, 2025</td>
+                                <td>Earthworms</td>
+                                <td>Field A-1 (Tomato)</td>
+                                <td>High count after rain, soil looks healthy.</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Oct 20, 2025</td>
+                                <td>Pollinators (Bees)</td>
+                                <td>Orchard</td>
+                                <td>Good activity on apple blossoms.</td>
+                                <td class="actions">
+                                    <a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div> <!-- /.tab-content -->
+    </main>
+
+    <!-- Reusable Modal -->
+    <div id="dynamicModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Dynamic Title</h2>
+                <span class="modal-close" id="modalClose">&times;</span>
+            </div>
+            <form id="dynamicForm">
+                <div class="modal-form" id="modalFormContainer">
+                    <!-- Form fields will be injected here by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
+                    <button type="submit" class="primary-btn" id="modalSubmitBtn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+
+                    // Deactivate all tabs and panes
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.remove('active'));
+
+                    // Activate the clicked tab and corresponding pane
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // --- DYNAMIC MODAL & CRUD LOGIC ---
+            const mainContent = document.querySelector('.main-content');
+            const modalOverlay = document.getElementById('dynamicModalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalFormContainer = document.getElementById('modalFormContainer');
+            const modalForm = document.getElementById('dynamicForm');
+            const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+            const modalCloseBtn = document.getElementById('modalClose');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+            let currentConfig = null;
+            let editingItem = null; // Will store the item being edited {id, data}
+
+            // --- Helper Functions ---
+            const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-CA'); // YYYY-MM-DD
+            const parseDate = (formattedDate) => new Date(formattedDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+
+            const createFormGroup = (field) => {
+                const group = document.createElement('div');
+                group.className = `form-group ${field.fullWidth ? 'full-width' : ''}`;
+                const label = document.createElement('label');
+                label.htmlFor = field.id;
+                label.textContent = field.label;
+                group.appendChild(label);
+
+                if (field.type === 'select') {
+                    const select = document.createElement('select');
+                    select.id = field.id;
+                    field.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        select.appendChild(option);
+                    });
+                    group.appendChild(select);
+                } else {
+                    const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
+                    if(field.type !== 'textarea') input.type = field.type;
+                    input.id = field.id;
+                    input.placeholder = field.placeholder || '';
+                    if (field.type === 'date') input.value = formatDate(new Date());
+                    group.appendChild(input);
+                }
+                return group;
+            };
+
+            const openModal = (config, isEdit = false, data = {}) => {
+                currentConfig = config;
+                editingItem = isEdit ? data : null;
+                modalTitle.textContent = isEdit ? config.title.replace('Add', 'Edit') : config.title;
+                modalSubmitBtn.textContent = isEdit ? 'Update' : 'Save';
+                modalFormContainer.innerHTML = '';
+                config.fields.forEach(field => modalFormContainer.appendChild(createFormGroup(field)));
+                
+                if (isEdit) {
+                    config.fields.forEach(field => {
+                        const input = document.getElementById(field.id);
+                        if (input) input.value = data.values[field.id] || '';
+                    });
+                }
+                
+                modalOverlay.classList.add('active');
+            };
+
+            const closeModal = () => {
+                modalOverlay.classList.remove('active');
+                modalForm.reset();
+                currentConfig = null;
+                editingItem = null;
+            };
+
+            // --- Modal Event Listeners ---
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalCancelBtn.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+            // --- NEW: Local Storage Database Logic ---
+            const DB_KEY = 'farmLogBiologicalData';
+            let db = {};
+
+            function getInitialData() {
+                return {
+                    seeds: [
+                        { id: 1, name: 'Tomato', variety: 'Roma VF', quantity: '2.5 kg', location: 'Cool Storage - Shelf 3', purchaseDate: '2025-10-15' },
+                        { id: 2, name: 'Wheat', variety: 'Sonalika', quantity: '150 kg', location: 'Main Barn - Bin 2', purchaseDate: '2025-09-30' },
+                        { id: 3, name: 'Corn', variety: 'Sweet Hybrid', quantity: '10 kg', location: 'Cool Storage - Shelf 4', purchaseDate: '2025-10-05' },
+                    ],
+                    crops: [
+                        { id: 1, name: 'Tomato (Roma)', status: 'growing' },
+                        { id: 2, name: 'Wheat (Sonalika)', status: 'harvesting' },
+                    ],
+                    livestock: [
+                        { id: 1, type: 'Holstein Cow', tagId: '#0072', health: 'Good' },
+                        { id: 2, type: 'Jersey Cow', tagId: '#0034', health: 'Monitor' },
+                        { id: 3, type: 'Boer Goat', tagId: '#G-012', health: 'Good' },
+                    ],
+                    feed: [
+                        { id: 1, type: 'Alfalfa Hay', quantity: '200 Bales', location: 'Hay Barn - Bay 1', lastStocked: '2025-10-20' },
+                        { id: 2, type: 'Cattle Feed (16% Protein)', quantity: '12 Bags (50kg)', location: 'Feed Shed', lastStocked: '2025-10-25' },
+                    ],
+                    compost: [
+                        { id: 1, type: 'Cow Manure', location: 'Pile A (Next to barn)', status: 'Curing (3/6 mos)', quantity: '15' },
+                        { id: 2, type: 'Vermicompost', location: 'Bin 1', status: 'Ready to Use', quantity: '2' },
+                    ],
+                    beneficials: [
+                        { id: 1, date: '2025-10-22', type: 'Earthworms', location: 'Field A-1 (Tomato)', notes: 'High count after rain, soil looks healthy.' },
+                        { id: 2, date: '2025-10-20', type: 'Pollinators (Bees)', location: 'Orchard', notes: 'Good activity on apple blossoms.' },
+                    ]
+                };
+            }
+
+            function loadDb() {
+                const data = localStorage.getItem(DB_KEY);
+                if (data) {
+                    db = JSON.parse(data);
+                } else {
+                    db = getInitialData();
+                    saveDb();
+                }
+            }
+
+            function saveDb() {
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            }
+
+            // --- CRUD Configurations ---
+            const modalConfigs = {
+                addSeedBtn: {
+                    title: 'Add New Seed Batch',
+                    dbKey: 'seeds',
+                    target: '#seedsTableBody',
+                    fields: [
+                        { id: 'name', label: 'Seed Name', type: 'text', placeholder: 'e.g., Carrot' },
+                        { id: 'variety', label: 'Variety', type: 'text', placeholder: 'e.g., Nantes' },
+                        { id: 'quantity', label: 'Quantity', type: 'text', placeholder: 'e.g., 1 kg' },
+                        { id: 'location', label: 'Storage Location', type: 'text', placeholder: 'e.g., Cool Storage - Shelf 1' },
+                        { id: 'purchaseDate', label: 'Purchase Date', type: 'date', fullWidth: true },
+                    ],
+                    render: (item) => `<td>${item.name}</td><td>${item.variety}</td><td>${item.quantity}</td><td>${item.location}</td><td>${parseDate(item.purchaseDate)}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ name: row.cells[0].textContent, variety: row.cells[1].textContent, quantity: row.cells[2].textContent, location: row.cells[3].textContent, purchaseDate: formatDate(row.cells[4].textContent) }),
+                },
+                addCropBtn: {
+                    title: 'Add New Crop Planting',
+                    dbKey: 'crops',
+                    target: '#cropsGrid',
+                    cardClass: 'crop-card',
+                    fields: [
+                        { id: 'name', label: 'Crop Name', type: 'text', placeholder: 'e.g., Corn (Sweet Hybrid)', fullWidth: true },
+                        { id: 'status', label: 'Status', type: 'select', options: [{value: 'growing', text: 'Growing'}, {value: 'harvesting', text: 'Harvesting'}] },
+                    ],
+                    render: (item) => `<div class="card-header"><h3>${item.name}</h3><span class="status-tag ${item.status}">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</span></div>`,
+                    read: (card) => ({ name: card.querySelector('h3').textContent, status: card.querySelector('.status-tag').textContent.toLowerCase() }),
+                },
+                addLivestockBtn: {
+                    title: 'Add New Animal',
+                    dbKey: 'livestock',
+                    target: '#livestockGrid',
+                    cardClass: 'livestock-card',
+                    fields: [
+                        { id: 'type', label: 'Animal Type', type: 'text', placeholder: 'e.g., Holstein Cow' },
+                        { id: 'tagId', label: 'Tag ID', type: 'text', placeholder: 'e.g., #0088' },
+                        { id: 'health', label: 'Health Status', type: 'select', options: [{value: 'Good', text: 'Good'}, {value: 'Monitor', text: 'Monitor'}] },
+                    ],
+                    render: (item) => {
+                        const icon = item.type.toLowerCase().includes('cow') ? 'fa-cow' : (item.type.toLowerCase().includes('goat') ? 'fa-goat' : 'fa-horse');
+                        const healthIcon = item.health === 'Good' ? 'fa-circle-check' : 'fa-circle-exclamation';
+                        return `<div class="card-image"><i class="fa-solid ${icon}"></i></div><div class="card-content"><h3>${item.type}</h3><p class="tag-id">Tag ID: ${item.tagId}</p><p class="health-status"><i class="fa-solid ${healthIcon}"></i> Health: ${item.health}</p><div class="card-actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></div></div>`;
+                    },
+                    read: (card) => ({ type: card.querySelector('h3').textContent, tagId: card.querySelector('.tag-id').textContent.replace('Tag ID: ', ''), health: card.querySelector('.health-status').textContent.trim().replace('Health: ', '') }),
+                },
+                addFeedBtn: {
+                    title: 'Add Feed Stock',
+                    dbKey: 'feed',
+                    target: '#feedTableBody',
+                    fields: [
+                        { id: 'type', label: 'Feed Type', type: 'text', placeholder: 'e.g., Corn Silage', fullWidth: true },
+                        { id: 'quantity', label: 'Quantity', type: 'text', placeholder: 'e.g., 5 Tons' },
+                        { id: 'location', label: 'Storage Location', type: 'text', placeholder: 'e.g., Silo 2' },
+                        { id: 'lastStocked', label: 'Last Stocked', type: 'date' },
+                    ],
+                    render: (item) => `<td>${item.type}</td><td>${item.quantity}</td><td>${item.location}</td><td>${parseDate(item.lastStocked)}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ type: row.cells[0].textContent, quantity: row.cells[1].textContent, location: row.cells[2].textContent, lastStocked: formatDate(row.cells[3].textContent) }),
+                },
+                addCompostBtn: {
+                    title: 'Log New Pile',
+                    dbKey: 'compost',
+                    target: '#compostTableBody',
+                    fields: [
+                        { id: 'type', label: 'Type', type: 'text', placeholder: 'e.g., Green Waste Compost' },
+                        { id: 'location', label: 'Location', type: 'text', placeholder: 'e.g., Pile C' },
+                        { id: 'status', label: 'Status', type: 'text', placeholder: 'e.g., Starting' },
+                        { id: 'quantity', label: 'Est. Quantity (m³)', type: 'text', placeholder: 'e.g., 10' },
+                    ],
+                    render: (item) => `<td>${item.type}</td><td>${item.location}</td><td>${item.status}</td><td>${item.quantity} m³</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ type: row.cells[0].textContent, location: row.cells[1].textContent, status: row.cells[2].textContent, quantity: row.cells[3].textContent.replace(' m³', '') }),
+                },
+                addBeneficialBtn: {
+                    title: 'Log Observation',
+                    dbKey: 'beneficials',
+                    target: '#beneficialsTableBody',
+                    fields: [
+                        { id: 'date', label: 'Date', type: 'date' },
+                        { id: 'type', label: 'Type', type: 'text', placeholder: 'e.g., Ladybugs' },
+                        { id: 'location', label: 'Location', type: 'text', placeholder: 'e.g., Greenhouse 1' },
+                        { id: 'notes', label: 'Observation Notes', type: 'textarea', placeholder: 'e.g., Released to control aphids', fullWidth: true },
+                    ],
+                    render: (item) => `<td>${parseDate(item.date)}</td><td>${item.type}</td><td>${item.location}</td><td>${item.notes}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ date: formatDate(row.cells[0].textContent), type: row.cells[1].textContent, location: row.cells[2].textContent, notes: row.cells[3].textContent }),
+                }
+            };
+
+            // --- Data Rendering Functions ---
+            function renderAllData() {
+                Object.values(modalConfigs).forEach(config => {
+                    const items = db[config.dbKey] || [];
+                    const container = document.querySelector(config.target);
+                    container.innerHTML = ''; // Clear previous content
+
+                    if (config.target.endsWith('Body')) { // It's a table
+                        items.forEach(item => {
+                            const row = container.insertRow();
+                            row.dataset.id = item.id;
+                            row.innerHTML = config.render(item);
+                        });
+                    } else { // It's a grid
+                        items.forEach(item => {
+                            const card = document.createElement('div');
+                            card.dataset.id = item.id;
+                            card.className = config.cardClass;
+                            card.innerHTML = config.render(item);
+                            container.appendChild(card);
+                        });
+                    }
+                });
+            }
+
+            // --- Main Event Delegation for Add, Edit, Delete ---
+            mainContent.addEventListener('click', (e) => {
+                const target = e.target;
+                const addBtn = target.closest('.primary-btn[id]');
+                const editBtn = target.closest('.edit-btn');
+                const deleteBtn = target.closest('.delete-btn');
+
+                if (addBtn && modalConfigs[addBtn.id]) {
+                    openModal(modalConfigs[addBtn.id]);
+                } else if (editBtn) {
+                    e.preventDefault();
+                    const element = editBtn.closest('[data-id]');
+                    const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                    const config = modalConfigs[configKey];
+                    if (config && config.read) {
+                        const id = parseInt(element.dataset.id, 10);
+                        const values = config.read(element);
+                        openModal(config, true, { id, values });
+                    }
+                } else if (deleteBtn) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to delete this item?')) {
+                        const element = deleteBtn.closest('[data-id]');
+                        const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                        const config = modalConfigs[configKey];
+                        const id = parseInt(element.dataset.id, 10);
+                        
+                        // Find and remove the item from the local db
+                        db[config.dbKey] = db[config.dbKey].filter(item => item.id !== id);
+                        saveDb();
+                        renderAllData(); // Re-render everything
+                    }
+                }
+            });
+
+            // --- Form Submission Handler ---
+            modalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!currentConfig) return;
+
+                const formData = {};
+                let allFieldsValid = true;
+                currentConfig.fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (!input.value && input.required) {
+                        allFieldsValid = false;
+                    }
+                    formData[field.id] = input.value;
+                });
+
+                if (!allFieldsValid) {
+                    alert('Please fill out all required fields.');
+                    return;
+                }
+
+                if (editingItem) {
+                    // Update mode
+                    const itemIndex = db[currentConfig.dbKey].findIndex(item => item.id === editingItem.id);
+                    if (itemIndex > -1) {
+                        db[currentConfig.dbKey][itemIndex] = { ...db[currentConfig.dbKey][itemIndex], ...formData };
+                    }
+                } else {
+                    // Add mode
+                    const newId = Date.now(); // Simple unique ID
+                    const newItem = { id: newId, ...formData };
+                    db[currentConfig.dbKey].push(newItem);
+                }
+
+                saveDb();
+                renderAllData();
+                closeModal();
+            });
+
+            // --- Initial Load ---
+            loadDb();
+            renderAllData();
+        });
+    </script>
+</body>
+</html>

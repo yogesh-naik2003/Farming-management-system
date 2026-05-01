@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Resources - FarmLog AI</title>
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        /* --- Root Variables (Same as your dashboard) --- */
+        :root {
+            --primary-color: #26a69a;
+            --secondary-color: #f9a825;
+            --dark-color: #263238;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        /* --- Top Navigation Bar (Same as your dashboard) --- */
+        .top-nav {
+            background-color: var(--dark-color);
+            color: var(--white);
+            height: var(--header-height);
+            width: 100%;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-left { display: flex; align-items: center; }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.4rem; font-weight: 600; color: var(--white);
+            text-decoration: none; margin-right: 20px;
+        }
+        .nav-logo i { color: var(--primary-color); font-size: 1.8rem; }
+        .nav-links { list-style: none; display: flex; gap: 5px; }
+        .nav-links a {
+            color: #eceff1; text-decoration: none; font-size: 0.9rem;
+            font-weight: 400; display: flex; align-items: center;
+            gap: 8px; padding: 10px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a.active, 
+        .nav-links a:hover {
+            background-color: var(--primary-color);
+            color: var(--white); font-weight: 500;
+        }
+
+        /* --- Button Styles (Shared) --- */
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+        .primary-btn:hover { background-color: #2bbbad; }
+        .primary-btn i { margin-right: 8px; }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-danger-secondary {
+            background-color: transparent;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-danger-secondary:hover { background-color: #d32f2f; color: var(--white); }
+        
+        .btn-danger {
+            background-color: #e57373;
+            color: var(--white);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+        .btn-danger:hover { background-color: #ef5350; }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            padding: 30px;
+            padding-top: calc(var(--header-height) + 30px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* --- Tab Navigation --- */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            color: var(--dark-color);
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* --- Tab Content --- */
+        .tab-content {
+            padding-top: 10px;
+        }
+        .tab-pane {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-pane.active {
+            display: block; /* Shown when active */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Section Header (Inside each tab) --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        /* --- Data Table Style --- */
+        .data-table-container {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 600px;
+        }
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .data-table th {
+            font-weight: 600;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        .data-table td {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* --- Item Card Grid --- */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .item-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .item-card .card-image {
+            background-color: var(--dark-color);
+            color: var(--primary-color);
+            font-size: 5rem;
+            display: grid;
+            place-items: center;
+            height: 150px;
+        }
+        .item-card .card-content {
+            padding: 20px;
+        }
+        .item-card h3 {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        .item-card .tag-id {
+            color: #777;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .item-card .info-status {
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .info-status .fa-circle-check { color: #388e3c; }
+        .info-status .fa-circle-exclamation { color: #f9a825; }
+        .item-card .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* --- NEW: Modal Styles --- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex; /* Show modal */
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.4s ease-out;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .modal-close {
+            color: #aaa;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: var(--dark-color);
+        }
+        .modal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1; /* Span full width */
+        }
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .form-group input {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
+        }
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .nav-links a span { display: none; }
+            .nav-links a { padding: 10px; font-size: 1.2rem; }
+            .nav-logo { margin-right: 15px; }
+            .nav-links { gap: 2px; }
+            .top-nav { padding: 0 15px; }
+        }
+         @media (max-width: 768px) {
+            .nav-logo span { display: none; }
+            .main-content { padding: 15px; padding-top: calc(var(--header-height) + 15px); }
+            .page-title { font-size: 1.8rem; }
+            .tab-btn { padding: 10px 12px; font-size: 0.9rem; }
+            .modal-form { grid-template-columns: 1fr; } /* Stack form inputs */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- --- Top Navigation Bar --- -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="nav-logo">
+                <i class="fa-solid fa-tractor"></i>
+                <span>FarmLog AI</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></a></li>
+                <!-- Set "Natural" as the active page -->
+                <li><a href="natural.html" class="active"><i class="fa-solid fa-globe"></i> <span>Natural</span></a></li>
+                <li><a href="biological.html"><i class="fa-solid fa-leaf"></i> <span>Biological</span></a></li>
+                <li><a href="physical.html"><i class="fa-solid fa-tractor"></i> <span>Physical</span></a></li>
+                <li><a href="financial.html"><i class="fa-solid fa-coins"></i> <span>Financial</span></a></li>
+                <li><a href="human.html"><i class="fa-solid fa-users"></i> <span>Human</span></a></li>
+                <li><a href="material.html"><i class="fa-solid fa-flask-vial"></i> <span>Material</span></a></li>
+                <li><a href="digital.html"><i class="fa-solid fa-laptop-code"></i> <span>Digital</span></a></li>
+                <li><a href="energy.html"><i class="fa-solid fa-solar-panel"></i> <span>Energy</span></a></li>
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- --- Main Content --- -->
+    <main class="main-content">
+
+        <h1 class="page-title">Natural Resources</h1>
+
+        <!-- --- Tab Navigation --- -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="land">
+                <i class="fa-solid fa-layer-group"></i> Land & Plots
+            </button>
+            <button class="tab-btn" data-tab="soil">
+                <i class="fa-solid fa-flask-vial"></i> Soil Nutrients
+            </button>
+            <button class="tab-btn" data-tab="water">
+                <i class="fa-solid fa-water"></i> Water Sources
+            </button>
+            <button class="tab-btn" data-tab="sunlight">
+                <i class="fa-solid fa-sun"></i> Sunlight Log
+            </button>
+            <button class="tab-btn" data-tab="air">
+                <i class="fa-solid fa-wind"></i> Air Quality
+            </button>
+            <button class="tab-btn" data-tab="biodiversity">
+                <i class="fa-solid fa-bug"></i> Biodiversity
+            </button>
+        </nav>
+
+        <!-- --- Tab Content Container --- -->
+        <div class="tab-content">
+
+            <!-- ======================= Tab 1: Land ======================= -->
+            <div id="land" class="tab-pane active">
+                <div class="section-header">
+                    <h2>Land & Plots</h2>
+                    <button class="primary-btn" id="addLandBtn"><i class="fa-solid fa-plus"></i> Add New Plot</button>
+                </div>
+                <!-- Using the same card style as 'Livestock' from your example -->
+                <div class="item-grid" id="landGrid"></div>
+            </div>
+
+            <!-- ======================= Tab 2: Soil Nutrients ======================= -->
+            <div id="soil" class="tab-pane">
+                <div class="section-header">
+                    <h2>Soil Nutrient Logs</h2>
+                    <!-- ADDED ID HERE -->
+                    <button class="primary-btn" id="addSoilTestBtn"><i class="fa-solid fa-plus"></i> Add Soil Test</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>N (mg/kg)</th>
+                                <th>P (mg/kg)</th>
+                                <th>K (mg/kg)</th>
+                                <th>pH</th>
+                                <th>Last Tested</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- ADDED ID HERE -->
+                        <tbody id="soilTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 3: Water Sources ======================= -->
+            <div id="water" class="tab-pane">
+                <div class="section-header">
+                    <h2>Water Sources</h2>
+                    <button class="primary-btn" id="addWaterBtn"><i class="fa-solid fa-plus"></i> Add Water Source</button>
+                </div>
+                <div class="item-grid" id="waterGrid"></div>
+            </div>
+
+            <!-- ======================= Tab 4: Sunlight ======================= -->
+            <div id="sunlight" class="tab-pane">
+                <div class="section-header">
+                    <h2>Sunlight Log</h2>
+                    <button class="primary-btn" id="addSunlightBtn"><i class="fa-solid fa-plus"></i> Log Sunlight Hours</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Avg. Hours/Day</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sunlightTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 5: Air Quality ======================= -->
+            <div id="air" class="tab-pane">
+                <div class="section-header">
+                    <h2>Air Quality Log</h2>
+                    <button class="primary-btn" id="addAirBtn"><i class="fa-solid fa-plus"></i> Log Air Quality</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>AQI</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="airTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ======================= Tab 6: Biodiversity ======================= -->
+            <div id="biodiversity" class="tab-pane">
+                <div class="section-header">
+                    <h2>Biodiversity Log</h2>
+                    <button class="primary-btn" id="addBioBtn"><i class="fa-solid fa-plus"></i> Log Observation</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Observation Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bioTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div> <!-- /.tab-content -->
+    </main>
+
+    <!-- --- NEW: Soil Test Modal --- -->
+    <div id="dynamicModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Dynamic Title</h2>
+                <span class="modal-close" id="modalCloseBtn">&times;</span>
+            </div>
+            <form id="dynamicForm">
+                <div class="modal-form" id="modalFormContainer">
+                    <!-- Dynamic form fields will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="modalCancelBtn">Cancel</button>
+                    <button type="submit" class="primary-btn" id="modalSubmitBtn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- --- JavaScript for Tab Switching and Modal --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Tab Switching Logic ---
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+
+                    // Deactivate all tabs and panes
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.remove('active'));
+
+                    // Activate the clicked tab and corresponding pane
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // --- DYNAMIC MODAL & CRUD LOGIC ---
+            const dynamicModalOverlay = document.getElementById('dynamicModalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalFormContainer = document.getElementById('modalFormContainer');
+            const dynamicForm = document.getElementById('dynamicForm');
+            const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+            const mainContent = document.querySelector('.main-content');
+
+            let currentConfig = null;
+            let editingItem = null; // Will store the item being edited {id, data}
+
+            // --- LOCAL STORAGE DATABASE LOGIC ---
+            const DB_KEY = 'farmLogNaturalData';
+            let db = {};
+
+            function getInitialData() {
+                return {
+                    land: [
+                        { id: 1, plotName: 'Field A-1 (Main)', plotType: 'Field (Owned)', plotUse: 'Fallow' },
+                        { id: 2, plotName: 'Plot B-2 (Orchard)', plotType: 'Plot (Owned)', plotUse: 'Apple Orchard' },
+                        { id: 3, plotName: 'Greenhouse 1', plotType: 'Structure', plotUse: 'Tomato Saplings' }
+                    ],
+                    soil: [
+                        { id: 1, soilLocation: 'Field A-1 (Main)', soilN: '120', soilP: '15', soilK: '180', soilPh: '6.8', soilTestDate: '2025-10-10' },
+                        { id: 2, soilLocation: 'Plot B-2 (Orchard)', soilN: '145', soilP: '12', soilK: '160', soilPh: '6.5', soilTestDate: '2025-09-20' }
+                    ],
+                    water: [
+                        { id: 1, sourceName: 'Main Well', sourceType: 'Borewell', sourceStatus: 'Good' },
+                        { id: 2, sourceName: 'Reservoir Pond', sourceType: 'Surface Water', sourceStatus: 'Low' }
+                    ],
+                    sunlight: [
+                        { id: 1, sunDate: '2025-10-28', sunLocation: 'All Fields', sunHours: '8.5', sunNotes: 'Clear skies, strong intensity.' },
+                        { id: 2, sunDate: '2025-10-27', sunLocation: 'All Fields', sunHours: '6.0', sunNotes: 'Partly cloudy, moderate intensity.' }
+                    ],
+                    air: [
+                        { id: 1, airDate: '2025-10-28', airLocation: 'Farm Perimeter', airAqi: '35', airNotes: 'Clear air, low pest activity.' }
+                    ],
+                    biodiversity: [
+                        { id: 1, bioDate: '2025-10-22', bioType: 'Earthworms', bioLocation: 'Field A-1 (Main)', bioNotes: 'High count after rain, soil looks healthy.' },
+                        { id: 2, bioDate: '2025-10-20', bioType: 'Pollinators (Bees)', bioLocation: 'Plot B-2 (Orchard)', bioNotes: 'Good activity on apple blossoms.' },
+                        { id: 3, bioDate: '2025-10-19', bioType: 'Ladybugs', bioLocation: 'Greenhouse 1', bioNotes: 'Spotted on tomato plants, good aphid control.' }
+                    ]
+                };
+            }
+
+            function loadDb() {
+                const data = localStorage.getItem(DB_KEY);
+                if (data) {
+                    db = JSON.parse(data);
+                } else {
+                    db = getInitialData();
+                    saveDb();
+                }
+            }
+
+            function saveDb() {
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            }
+
+            function renderAllData() {
+                Object.values(modalConfigs).forEach(config => {
+                    const items = db[config.dbKey] || [];
+                    const container = document.querySelector(config.target);
+                    if (!container) return;
+
+                    container.innerHTML = ''; // Clear previous content
+
+                    if (config.target.endsWith('Body')) { // It's a table
+                        items.forEach(item => {
+                            const row = container.insertRow();
+                            row.dataset.id = item.id;
+                            row.innerHTML = config.render(item);
+                        });
+                    } else { // It's a grid
+                        items.forEach(item => {
+                            const card = document.createElement('div');
+                            card.dataset.id = item.id;
+                            card.className = 'item-card';
+                            card.innerHTML = config.render(item);
+                            container.appendChild(card);
+                        });
+                    }
+                });
+            }
+
+            // --- Helper Functions ---
+            // Helper function to format date as "Month Day, Year"
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                // Adjust for time-zone offset to prevent day-before issue
+                const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
+                
+                return adjustedDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric'
+                });
+            }
+
+            // Helper to convert "Mon Day, Year" back to "YYYY-MM-DD"
+            function parseDate(formattedDate) {
+                if (!formattedDate) return '';
+                const date = new Date(formattedDate);
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            }
+
+            // Helper function to get today's date in YYYY-MM-DD format
+            function getTodayDate() {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const dd = String(today.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            }
+
+            // Helper to create a form group
+            function createFormGroup(field) {
+                const group = document.createElement('div');
+                group.className = `form-group ${field.fullWidth ? 'full-width' : ''}`;
+                
+                const label = document.createElement('label');
+                label.htmlFor = field.id;
+                label.textContent = field.label;
+                group.appendChild(label);
+
+                if (field.type === 'select') {
+                    const select = document.createElement('select');
+                    select.id = field.id;
+                    field.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        select.appendChild(option);
+                    });
+                    group.appendChild(select);
+                } else {
+                    const input = document.createElement('input');
+                    input.type = field.type;
+                    input.id = field.id;
+                    input.placeholder = field.placeholder || '';
+                    if (field.type === 'date') input.value = getTodayDate();
+                    group.appendChild(input);
+                }
+                return group;
+            }
+
+            // Function to open the dynamic modal
+            function openModal(config, isEdit = false, data = {}) {
+                currentConfig = config;
+                editingItem = isEdit ? data : null;
+                modalTitle.textContent = isEdit ? config.title.replace('Add', 'Edit').replace('Log', 'Edit') : config.title;
+                modalSubmitBtn.textContent = isEdit ? 'Update' : 'Save';
+                
+                // Clear previous form and build new one
+                modalFormContainer.innerHTML = '';
+                config.fields.forEach(field => {
+                    modalFormContainer.appendChild(createFormGroup(field));
+                });
+
+                if (isEdit) {
+                    config.fields.forEach(field => {
+                        const input = document.getElementById(field.id);
+                        if (input) input.value = data.values[field.id] || '';
+                    });
+                }
+
+                dynamicModalOverlay.classList.add('active');
+            }
+
+            const closeModal = () => {
+                dynamicModalOverlay.classList.remove('active');
+                dynamicForm.reset();
+                currentConfig = null;
+                editingItem = null;
+            };
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalCancelBtn.addEventListener('click', closeModal);
+            dynamicModalOverlay.addEventListener('click', (e) => { if (e.target === dynamicModalOverlay) closeModal(); });
+
+            // Configuration for each "Add" button
+            const modalConfigs = {
+                'addLandBtn': {
+                    title: 'Add New Plot',
+                    dbKey: 'land',
+                    target: '#landGrid',
+                    fields: [
+                        { id: 'plotName', label: 'Plot Name', type: 'text', placeholder: 'e.g., Field C-3', fullWidth: true },
+                        { id: 'plotType', label: 'Type', type: 'text', placeholder: 'e.g., Field (Owned)' },
+                        { id: 'plotUse', label: 'Current Use', type: 'text', placeholder: 'e.g., Fallow' }
+                    ],
+                    render: (item) => `<div class="card-image"><i class="fa-solid fa-layer-group"></i></div><div class="card-content"><h3>${item.plotName}</h3><p class="tag-id">Type: ${item.plotType}</p><p class="info-status"><i class="fa-solid fa-circle-check"></i> Current Use: ${item.plotUse}</p><div class="card-actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></div></div>`,
+                    read: (card) => ({ plotName: card.querySelector('h3').textContent, plotType: card.querySelector('.tag-id').textContent.replace('Type: ', ''), plotUse: card.querySelector('.info-status').textContent.trim().replace('Current Use: ', '') })
+                },
+                'addSoilTestBtn': {
+                    title: 'Add New Soil Test',
+                    dbKey: 'soil',
+                    target: '#soilTableBody',
+                    fields: [
+                        { id: 'soilLocation', label: 'Location', type: 'text', placeholder: 'e.g., Field C-3', fullWidth: true },
+                        { id: 'soilN', label: 'N (mg/kg)', type: 'number', placeholder: 'e.g., 130' },
+                        { id: 'soilP', label: 'P (mg/kg)', type: 'number', placeholder: 'e.g., 20' },
+                        { id: 'soilK', label: 'K (mg/kg)', type: 'number', placeholder: 'e.g., 150' },
+                        { id: 'soilPh', label: 'pH', type: 'number', step: '0.1', placeholder: 'e.g., 6.7' },
+                        { id: 'soilTestDate', label: 'Test Date', type: 'date', fullWidth: true }
+                    ],
+                    render: (item) => `<td>${item.soilLocation}</td><td>${item.soilN}</td><td>${item.soilP}</td><td>${item.soilK}</td><td>${item.soilPh}</td><td>${formatDate(item.soilTestDate)}</td><td class="actions"><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a></td>`,
+                    read: (row) => ({ soilLocation: row.cells[0].textContent, soilN: row.cells[1].textContent, soilP: row.cells[2].textContent, soilK: row.cells[3].textContent, soilPh: row.cells[4].textContent, soilTestDate: parseDate(row.cells[5].textContent) })
+                },
+                'addWaterBtn': {
+                    title: 'Add Water Source',
+                    dbKey: 'water',
+                    target: '#waterGrid',
+                    fields: [
+                        { id: 'sourceName', label: 'Source Name', type: 'text', placeholder: 'e.g., Canal Outlet', fullWidth: true },
+                        { id: 'sourceType', label: 'Type', type: 'text', placeholder: 'e.g., Surface Water' },
+                        { id: 'sourceStatus', label: 'Status', type: 'text', placeholder: 'e.g., Good' }
+                    ],
+                    render: (item) => {
+                        const iconClass = item.sourceStatus.toLowerCase().includes('low') ? 'fa-circle-exclamation' : 'fa-circle-check';
+                        return `<div class="card-image"><i class="fa-solid fa-droplet"></i></div><div class="card-content"><h3>${item.sourceName}</h3><p class="tag-id">Type: ${item.sourceType}</p><p class="info-status"><i class="fa-solid ${iconClass}"></i> Status: ${item.sourceStatus}</p><div class="card-actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></div></div>`;
+                    },
+                    read: (card) => ({ sourceName: card.querySelector('h3').textContent, sourceType: card.querySelector('.tag-id').textContent.replace('Type: ', ''), sourceStatus: card.querySelector('.info-status').textContent.trim().replace('Status: ', '') })
+                },
+                'addSunlightBtn': {
+                    title: 'Log Sunlight Hours',
+                    dbKey: 'sunlight',
+                    target: '#sunlightTableBody',
+                    fields: [
+                        { id: 'sunDate', label: 'Date', type: 'date', fullWidth: true },
+                        { id: 'sunLocation', label: 'Location', type: 'text', placeholder: 'e.g., All Fields' },
+                        { id: 'sunHours', label: 'Avg. Hours/Day', type: 'number', placeholder: 'e.g., 7.5' },
+                        { id: 'sunNotes', label: 'Notes', type: 'text', placeholder: 'e.g., Clear skies', fullWidth: true }
+                    ],
+                    render: (item) => `<td>${formatDate(item.sunDate)}</td><td>${item.sunLocation}</td><td>${item.sunHours} hrs</td><td>${item.sunNotes}</td><td class="actions"><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a></td>`,
+                    read: (row) => ({ sunDate: parseDate(row.cells[0].textContent), sunLocation: row.cells[1].textContent, sunHours: row.cells[2].textContent.replace(' hrs', ''), sunNotes: row.cells[3].textContent })
+                },
+                'addAirBtn': {
+                    title: 'Log Air Quality',
+                    dbKey: 'air',
+                    target: '#airTableBody',
+                    fields: [
+                        { id: 'airDate', label: 'Date', type: 'date', fullWidth: true },
+                        { id: 'airLocation', label: 'Location', type: 'text', placeholder: 'e.g., Farm Perimeter' },
+                        { id: 'airAqi', label: 'AQI', type: 'number', placeholder: 'e.g., 40' },
+                        { id: 'airNotes', label: 'Notes', type: 'text', placeholder: 'e.g., Clear air', fullWidth: true }
+                    ],
+                    render: (item) => {
+                        const aqiDesc = item.airAqi <= 50 ? 'Good' : (item.airAqi <= 100 ? 'Moderate' : 'Unhealthy');
+                        return `<td>${formatDate(item.airDate)}</td><td>${item.airLocation}</td><td>${item.airAqi} (${aqiDesc})</td><td>${item.airNotes}</td><td class="actions"><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a></td>`;
+                    },
+                    read: (row) => ({ airDate: parseDate(row.cells[0].textContent), airLocation: row.cells[1].textContent, airAqi: row.cells[2].textContent.split(' ')[0], airNotes: row.cells[3].textContent })
+                },
+                'addBioBtn': {
+                    title: 'Log Biodiversity Observation',
+                    dbKey: 'biodiversity',
+                    target: '#bioTableBody',
+                    fields: [
+                        { id: 'bioDate', label: 'Date', type: 'date', fullWidth: true },
+                        { id: 'bioType', label: 'Type', type: 'text', placeholder: 'e.g., Ladybugs' },
+                        { id: 'bioLocation', label: 'Location', type: 'text', placeholder: 'e.g., Greenhouse 1' },
+                        { id: 'bioNotes', label: 'Observation Notes', type: 'text', placeholder: 'Spotted on tomato plants', fullWidth: true }
+                    ],
+                    render: (item) => `<td>${formatDate(item.bioDate)}</td><td>${item.bioType}</td><td>${item.bioLocation}</td><td>${item.bioNotes}</td><td class="actions"><a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a></td>`,
+                    read: (row) => ({ bioDate: parseDate(row.cells[0].textContent), bioType: row.cells[1].textContent, bioLocation: row.cells[2].textContent, bioNotes: row.cells[3].textContent })
+                }
+            };
+
+            // --- UNIFIED EVENT LISTENER FOR ADD, EDIT, DELETE ---
+            mainContent.addEventListener('click', (e) => {
+                const target = e.target;
+                const addBtn = target.closest('.primary-btn[id]');
+                const editBtn = target.closest('.edit-btn');
+                const deleteButton = e.target.closest('.delete-btn');
+
+                if (addBtn && modalConfigs[addBtn.id]) {
+                    openModal(modalConfigs[addBtn.id]);
+                } else if (editBtn) {
+                    e.preventDefault();
+                    const element = editBtn.closest('[data-id]');
+                    const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                    const config = modalConfigs[configKey];
+                    if (config && config.read) {
+                        const id = parseInt(element.dataset.id, 10);
+                        const values = config.read(element);
+                        openModal(config, true, { id, values });
+                    }
+                } else if (deleteButton) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to delete this item?')) {
+                        const element = deleteButton.closest('[data-id]');
+                        const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                        const config = modalConfigs[configKey];
+                        const id = parseInt(element.dataset.id, 10);
+                        
+                        db[config.dbKey] = db[config.dbKey].filter(item => item.id !== id);
+                        saveDb();
+                        renderAllData();
+                    }
+                }
+            });
+
+            // Generic form submission handler
+            dynamicForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!currentConfig) return;
+                
+                const formData = {};
+                let allFieldsValid = true;
+                currentConfig.fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (!input.value) allFieldsValid = false;
+                    formData[field.id] = input.value;
+                });
+
+                if (!allFieldsValid) {
+                    alert('Please fill out all fields.');
+                    return;
+                }
+
+                if (editingItem) {
+                    // Update mode
+                    const itemIndex = db[currentConfig.dbKey].findIndex(item => item.id === editingItem.id);
+                    if (itemIndex > -1) {
+                        db[currentConfig.dbKey][itemIndex] = { ...db[currentConfig.dbKey][itemIndex], ...formData };
+                    }
+                } else {
+                    // Add mode
+                    const newId = Date.now(); // Simple unique ID
+                    const newItem = { id: newId, ...formData };
+                    db[currentConfig.dbKey].push(newItem);
+                }
+
+                saveDb();
+                renderAllData();
+                closeModal();
+            });
+
+            loadDb();
+            renderAllData();
+        });
+    </script>
+</body>
+</html>

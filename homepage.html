@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer's Resource Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font 'Inter' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Inter font family */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            color: #333; /* Darker text for better contrast */
+        }
+        
+        /* Full-page background image */
+        body {
+            background-image: url('image8.png'); /* Scenic farm field */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keep background fixed while scrolling */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex;
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            padding: 2rem 0; /* Add some padding top/bottom */
+        }
+        
+        /* Overlay container */
+        .overlay {
+            /* * MODIFICATION:
+             * The background-color is set to 'transparent' as requested.
+             * The original value was 'rgba(255, 255, 255, 0.85)'.
+             */
+            background-color: transparent; /* Main container is now transparent */
+            border-radius: 1.5rem; /* Rounded corners for the main content area */
+            padding: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Base Card styling */
+        .card {
+            border-radius: 0.75rem; /* Slightly less rounded than the overlay */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #e2e8f0; /* Subtle border */
+            position: relative; /* Needed for absolute positioning of background overlay */
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px) scale(1.02);
+            border-color: #059669; /* Highlight border on hover */
+        }
+
+        /* --- STYLING FOR ALL BACKGROUND CARDS --- */
+        
+        /* This class will be on the inner div of all background cards */
+        .card-bg-content {
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+            height: 100%;
+            min-height: 280px; /* Ensure cards have a consistent minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+            color: white; /* Change text color for better contrast on dark background */
+        }
+        
+        .card-bg-content .card-title {
+            -webkit-text-fill-color: white; /* Ensure title is white */
+            background: none; /* Remove gradient for better visibility */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7); /* Text shadow for title */
+        }
+        
+        .card-bg-content .list-disc {
+            color: #e2e8f0; /* Lighter text for the list items */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Text shadow for list */
+        }
+
+        /* Individual Card Background Images */
+        .natural-resources-card {
+            background-image: url('natural.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .biological-resources-card {
+            background-image: url('image1.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .physical-resources-card {
+            background-image: url('image2.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .financial-resources-card {
+            background-image: url('image3.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .human-resources-card {
+            background-image: url('image4.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .material-chemical-card {
+            background-image: url('image5.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .digital-knowledge-card {
+            background-image: url('image7.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .energy-resources-card {
+            background-image: url('image6.png');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Gradient for main page title */
+        .main-title {
+            background: linear-gradient(to right, #eaf0ee, #a8e8d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="overlay max-w-7xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-12 main-title">
+            Farmer's Resource Overview
+        </h1>
+        
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+                <!-- Card 1: Natural Resources -->
+                <a href="natural.html" class="card natural-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Natural Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Land</li>
+                            <li>Soil nutrients</li>
+                            <li>Water sources</li>
+                            <li>Sunlight</li>
+                            <li>Air quality</li>
+                            <li>Biodiversity</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 2: Biological Resources -->
+                <a href="Biological.html" class="card biological-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Biological Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Seeds</li>
+                            <li>Crops</li>
+                            <li>Livestock</li>
+                            <li>Fodder and feed</li>
+                            <li>Manure and compost</li>
+                            <li>Beneficial microbes/insects</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 3: Physical Resources -->
+                <a href="physical.html" class="card physical-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Physical Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Machinery</li>
+                            <li>Irrigation systems</li>
+                            <li>Storage facilities</li>
+                            <li>Transport</li>
+                            <li>Fencing and protection</li>
+                            <li>Buildings</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 4: Financial Resources -->
+                <a href="financial.html" class="card financial-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Financial Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Cash flow</li>
+                            <li>Loans and credits</li>
+                            <li>Subsidies and grants</li>
+                            <li>Insurance</li>
+                            <li>Investments</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 5: Human Resources -->
+                <a href="human.html" class="card human-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Human Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Farmer and family</li>
+                            <li>Farm workers/laborers</li>
+                            <li>Technicians/experts</li>
+                            <li>Community groups or cooperatives</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 6: Material & Chemical -->
+                <a href="material.html" class="card material-chemical-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Material & Chemical
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Fertilizers</li>
+                            <li>Pesticides/Herbicides</li>
+                            <li>Growth regulators</li>
+                            <li>Packaging materials</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 7: Digital & Knowledge -->
+                <a href="digital.html" class="card digital-knowledge-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Digital & Knowledge
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Farm data records</li>
+                            <li>Mobile apps/web platforms</li>
+                            <li>IoT sensors and drones</li>
+                            <li>Weather and market information</li>
+                            <li>Training and extension services</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Card 8: Energy Resources -->
+                <a href="energy.html" class="card energy-resources-card">
+                    <div class="card-bg-content">
+                        <h2 class="card-title text-2xl font-bold mb-4">
+                            Energy Resources
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            <li>Electricity</li>
+                            <li>Fuel (diesel/petrol)</li>
+                            <li>Renewable energy</li>
+                        </ul>
+                    </div>
+                </a>
+
+            </div> <!-- End grid container -->
+        </main>
+    </div> <!-- End overlay -->
+
+</body>
+</html>

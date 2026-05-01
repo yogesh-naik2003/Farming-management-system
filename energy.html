@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Resources - FarmLog AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        /* --- Root Variables (Same as your dashboard) --- */
+        :root {
+            --primary-color: #26a69a;
+            --secondary-color: #f9a825;
+            --dark-color: #263238;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        /* --- Top Navigation Bar (Same as your dashboard) --- */
+        .top-nav {
+            background-color: var(--dark-color);
+            color: var(--white);
+            height: var(--header-height);
+            width: 100%;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-left { display: flex; align-items: center; }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.4rem; font-weight: 600; color: var(--white);
+            text-decoration: none; margin-right: 20px;
+        }
+        .nav-logo i { color: var(--primary-color); font-size: 1.8rem; }
+        .nav-links { list-style: none; display: flex; gap: 5px; }
+        .nav-links a {
+            color: #eceff1; text-decoration: none; font-size: 0.9rem;
+            font-weight: 400; display: flex; align-items: center;
+            gap: 8px; padding: 10px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a.active, 
+        .nav-links a:hover {
+            background-color: var(--primary-color);
+            color: var(--white); font-weight: 500;
+        }
+
+        /* --- Button Styles (Shared) --- */
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+        }
+        .primary-btn:hover { background-color: #2bbbad; }
+        .primary-btn i { margin-right: 8px; }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-danger-secondary {
+            background-color: transparent;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .btn-danger-secondary:hover { background-color: #d32f2f; color: var(--white); }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            padding: 30px;
+            padding-top: calc(var(--header-height) + 30px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* --- Tab Navigation --- */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover { color: var(--dark-color); }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* --- Tab Content --- */
+        .tab-content { padding-top: 10px; }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-pane.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Section Header (Inside each tab) --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        /* --- Data Table Style (For all tabs) --- */
+        .data-table-container { overflow-x: auto; }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-width: 600px;
+        }
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .data-table th {
+            font-weight: 600;
+            background-color: #fafafa;
+        }
+        .data-table td {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table .actions { display: flex; gap: 10px; }
+        
+        .status-tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .status-tag.active { background-color: #e8f5e9; color: #388e3c; }
+        .status-tag.offline { background-color: #eceff1; color: #546e7a; }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.4s ease-out;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { font-size: 1.5rem; font-weight: 600; }
+        .modal-close {
+            color: #aaa;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--dark-color); }
+        .modal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { font-weight: 500; margin-bottom: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            font-family: 'Poppins', sans-serif;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
+        }
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .nav-links a span { display: none; }
+            .nav-links a { padding: 10px; font-size: 1.2rem; }
+            .nav-logo { margin-right: 15px; }
+            .nav-links { gap: 2px; }
+            .top-nav { padding: 0 15px; }
+        }
+         @media (max-width: 768px) {
+            .nav-logo span { display: none; }
+            .main-content { padding: 15px; padding-top: calc(var(--header-height) + 15px); }
+            .page-title { font-size: 1.8rem; }
+            .tab-btn { padding: 10px 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="nav-logo">
+                <i class="fa-solid fa-tractor"></i>
+                <span>FarmLog AI</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="homepage.html"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span></a></li>
+                <li><a href="Biological.html"><i class="fa-solid fa-leaf"></i> <span>Biological</span></a></li>
+                <li><a href="physical.html"><i class="fa-solid fa-tractor"></i> <span>Physical</span></a></li>
+                <li><a href="natural.html"><i class="fa-solid fa-tractor"></i> <span>Naturalal</span></a></li>
+                <li><a href="financial.html"><i class="fa-solid fa-coins"></i> <span>Financial</span></a></li>
+                <li><a href="human.html"><i class="fa-solid fa-users"></i> <span>Human</span></a></li>
+                <li><a href="material.html"><i class="fa-solid fa-flask-vial"></i> <span>Material</span></a></li>
+                <li><a href="digital.html"><i class="fa-solid fa-laptop-code"></i> <span>Digital</span></a></li>
+                <li><a href="energy.html" class="active"><i class="fa-solid fa-solar-panel"></i> <span>Energy</span></a></li>
+            </ul>
+        </div>
+        
+    </nav>
+
+    <main class="main-content">
+
+        <h1 class="page-title">Energy Resources</h1>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="electricity">
+                <i class="fa-solid fa-plug-circle-bolt"></i> Electricity
+            </button>
+            <button class="tab-btn" data-tab="fuel">
+                <i class="fa-solid fa-gas-pump"></i> Fuel
+            </button>
+            <button class="tab-btn" data-tab="renewable">
+                <i class="fa-solid fa-wind"></i> Renewable Energy
+            </button>
+        </nav>
+
+        <div class="tab-content">
+
+            <div id="electricity" class="tab-pane active">
+                <div class="section-header">
+                    <h2>Electricity Usage Log</h2>
+                    <button class="primary-btn" id="addElectricityBtn"><i class="fa-solid fa-plus"></i> Log Meter Reading</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Purpose</th>
+                                <th>Monthly Bill / Est. Cost</th>
+                                <th>Last Reading</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="electricityTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="fuel" class="tab-pane">
+                <div class="section-header">
+                    <h2>Fuel Inventory</h2>
+                    <button class="primary-btn" id="addFuelBtn"><i class="fa-solid fa-plus"></i> Add Fuel Stock</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Fuel Type</th>
+                                <th>Primary Use</th>
+                                <th>Quantity on Hand</th>
+                                <th>Storage Location</th>
+                                <th>Last Refill</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fuelTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="renewable" class="tab-pane">
+                <div class="section-header">
+                    <h2>Renewable Energy Assets</h2>
+                    <button class="primary-btn" id="addRenewableBtn"><i class="fa-solid fa-plus"></i> Add New Asset</button>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Type</th>
+                                <th>Est. Daily Output</th>
+                                <th>Status</th>
+                                <th>Last Inspected</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="renewableTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div> </main>
+
+    <!-- Reusable Modal -->
+    <div id="dynamicModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Dynamic Title</h2>
+                <span class="modal-close" id="modalClose">&times;</span>
+            </div>
+            <form id="dynamicForm">
+                <div class="modal-form" id="modalFormContainer">
+                    <!-- Form fields will be injected here by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="modalCancelBtn">Cancel</button>
+                    <button type="submit" class="primary-btn" id="modalSubmitBtn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+
+                    // Deactivate all tabs and panes
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.remove('active'));
+
+                    // Activate the clicked tab and corresponding pane
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // --- DYNAMIC MODAL & CRUD LOGIC ---
+            const mainContent = document.querySelector('.main-content');
+            const modalOverlay = document.getElementById('dynamicModalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalFormContainer = document.getElementById('modalFormContainer');
+            const modalForm = document.getElementById('dynamicForm');
+            const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+            const modalCloseBtn = document.getElementById('modalClose');
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+            let currentConfig = null;
+            let editingItem = null; // Will store the item being edited {id, data}
+
+            // --- Helper Functions ---
+            const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-CA'); // YYYY-MM-DD
+            const parseDate = (formattedDate) => new Date(formattedDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+
+            const createFormGroup = (field) => {
+                const group = document.createElement('div');
+                group.className = `form-group ${field.fullWidth ? 'full-width' : ''}`;
+                const label = document.createElement('label');
+                label.htmlFor = field.id;
+                label.textContent = field.label;
+                group.appendChild(label);
+
+                if (field.type === 'select') {
+                    const select = document.createElement('select');
+                    select.id = field.id;
+                    field.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        select.appendChild(option);
+                    });
+                    group.appendChild(select);
+                } else {
+                    const input = document.createElement(field.type === 'textarea' ? 'textarea' : 'input');
+                    if(field.type !== 'textarea') input.type = field.type;
+                    input.id = field.id;
+                    input.placeholder = field.placeholder || '';
+                    if (field.type === 'date') input.value = formatDate(new Date());
+                    group.appendChild(input);
+                }
+                return group;
+            };
+
+            const openModal = (config, isEdit = false, data = {}) => {
+                currentConfig = config;
+                editingItem = isEdit ? data : null;
+                modalTitle.textContent = isEdit ? config.title.replace('Add', 'Edit').replace('Log', 'Edit') : config.title;
+                modalSubmitBtn.textContent = isEdit ? 'Update' : 'Save';
+                modalFormContainer.innerHTML = '';
+                config.fields.forEach(field => modalFormContainer.appendChild(createFormGroup(field)));
+                
+                if (isEdit) {
+                    config.fields.forEach(field => {
+                        const input = document.getElementById(field.id);
+                        if (input) input.value = data.values[field.id] || '';
+                    });
+                }
+                
+                modalOverlay.classList.add('active');
+            };
+
+            const closeModal = () => {
+                modalOverlay.classList.remove('active');
+                modalForm.reset();
+                currentConfig = null;
+                editingItem = null;
+            };
+
+            // --- Modal Event Listeners ---
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalCancelBtn.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+            
+            // --- LOCAL STORAGE DATABASE LOGIC ---
+            const DB_KEY = 'farmLogEnergyData';
+            let db = {};
+
+            function getInitialData() {
+                return {
+                    electricity: [
+                        { id: 1, source: 'Main Grid', purpose: 'Pumps, Lights, Cold Storage', cost: '$220.00', lastReading: '2025-10-28' },
+                        { id: 2, source: 'Backup Generator', purpose: 'Emergency Power', cost: '$45.00 (Fuel)', lastReading: '2025-10-15' }
+                    ],
+                    fuel: [
+                        { id: 1, type: 'Diesel', use: 'Tractors, Generator', quantity: '350 Liters', location: 'Main Tank', lastRefill: '2025-10-27' },
+                        { id: 2, type: 'Petrol', use: 'Small Pumps, Truck', quantity: '40 Liters', location: 'Jerry Cans (Shed)', lastRefill: '2025-10-22' }
+                    ],
+                    renewable: [
+                        { id: 1, name: 'Rooftop Solar Array', type: 'Solar', output: '40 kWh', status: 'active', lastInspected: '2025-10-01' },
+                        { id: 2, name: 'Biogas Plant', type: 'Biogas', output: '15 m³', status: 'active', lastInspected: '2025-10-15' },
+                        { id: 3, name: 'Wind Turbine (Small)', type: 'Wind', output: '5 kWh', status: 'offline', lastInspected: '2025-10-20' }
+                    ]
+                };
+            }
+
+            function loadDb() {
+                const data = localStorage.getItem(DB_KEY);
+                if (data) {
+                    db = JSON.parse(data);
+                } else {
+                    db = getInitialData();
+                    saveDb();
+                }
+            }
+
+            function saveDb() {
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            }
+
+            // --- DATA RENDERING FUNCTION ---
+            function renderAllData() {
+                Object.values(modalConfigs).forEach(config => {
+                    const items = db[config.dbKey] || [];
+                    const tableBody = document.querySelector(config.target);
+                    tableBody.innerHTML = ''; // Clear previous content
+
+                    items.forEach(item => {
+                        const row = tableBody.insertRow();
+                        row.dataset.id = item.id;
+                        row.innerHTML = config.render(item);
+                    });
+                });
+            }
+
+            // --- CRUD Configurations ---
+            const modalConfigs = {
+                addElectricityBtn: {
+                    title: 'Log Meter Reading',
+                    dbKey: 'electricity',
+                    target: '#electricityTableBody',
+                    fields: [
+                        { id: 'source', label: 'Source', type: 'text', placeholder: 'e.g., Main Grid' },
+                        { id: 'purpose', label: 'Purpose', type: 'text', placeholder: 'e.g., Irrigation Pumps' },
+                        { id: 'cost', label: 'Monthly Bill / Est. Cost', type: 'text', placeholder: 'e.g., $250.00' },
+                        { id: 'lastReading', label: 'Last Reading Date', type: 'date', fullWidth: true },
+                    ],
+                    render: (item) => `<td>${item.source}</td><td>${item.purpose}</td><td>${item.cost}</td><td>${parseDate(item.lastReading)}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ source: row.cells[0].textContent, purpose: row.cells[1].textContent, cost: row.cells[2].textContent, lastReading: formatDate(row.cells[3].textContent) }),
+                },
+                addFuelBtn: {
+                    title: 'Add Fuel Stock',
+                    dbKey: 'fuel',
+                    target: '#fuelTableBody',
+                    fields: [
+                        { id: 'type', label: 'Fuel Type', type: 'select', options: [{value: 'Diesel', text: 'Diesel'}, {value: 'Petrol', text: 'Petrol'}, {value: 'Kerosene', text: 'Kerosene'}] },
+                        { id: 'use', label: 'Primary Use', type: 'text', placeholder: 'e.g., Tractors' },
+                        { id: 'quantity', label: 'Quantity on Hand', type: 'text', placeholder: 'e.g., 500 Liters' },
+                        { id: 'location', label: 'Storage Location', type: 'text', placeholder: 'e.g., Main Tank' },
+                        { id: 'lastRefill', label: 'Last Refill Date', type: 'date', fullWidth: true },
+                    ],
+                    render: (item) => `<td>${item.type}</td><td>${item.use}</td><td>${item.quantity}</td><td>${item.location}</td><td>${parseDate(item.lastRefill)}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ type: row.cells[0].textContent, use: row.cells[1].textContent, quantity: row.cells[2].textContent, location: row.cells[3].textContent, lastRefill: formatDate(row.cells[4].textContent) }),
+                },
+                addRenewableBtn: {
+                    title: 'Add New Renewable Asset',
+                    dbKey: 'renewable',
+                    target: '#renewableTableBody',
+                    fields: [
+                        { id: 'name', label: 'Asset Name', type: 'text', placeholder: 'e.g., Barn Solar Panels', fullWidth: true },
+                        { id: 'type', label: 'Type', type: 'select', options: [{value: 'Solar', text: 'Solar'}, {value: 'Wind', text: 'Wind'}, {value: 'Biogas', text: 'Biogas'}] },
+                        { id: 'output', label: 'Est. Daily Output', type: 'text', placeholder: 'e.g., 20 kWh' },
+                        { id: 'status', label: 'Status', type: 'select', options: [{value: 'active', text: 'Active'}, {value: 'offline', text: 'Offline (Maint.)'}] },
+                        { id: 'lastInspected', label: 'Last Inspected Date', type: 'date' },
+                    ],
+                    render: (item) => `<td>${item.name}</td><td>${item.type}</td><td>${item.output}</td><td><span class="status-tag ${item.status}">${item.status === 'active' ? 'Active' : 'Offline (Maint.)'}</span></td><td>${parseDate(item.lastInspected)}</td><td class="actions"><a href="#" class="btn-secondary edit-btn"><i class="fa-solid fa-pen"></i> Edit</a> <a href="#" class="btn-danger-secondary delete-btn"><i class="fa-solid fa-trash"></i> Delete</a></td>`,
+                    read: (row) => ({ name: row.cells[0].textContent, type: row.cells[1].textContent, output: row.cells[2].textContent, status: row.cells[3].querySelector('span').className.split(' ')[1], lastInspected: formatDate(row.cells[4].textContent) }),
+                }
+            };
+
+            // --- Main Event Delegation ---
+            mainContent.addEventListener('click', (e) => {
+                const target = e.target;
+                const addBtn = target.closest('.primary-btn[id]');
+                const editBtn = target.closest('.edit-btn');
+                const deleteBtn = target.closest('.delete-btn');
+
+                if (addBtn && modalConfigs[addBtn.id]) {
+                    openModal(modalConfigs[addBtn.id]);
+                } else if (editBtn) {
+                    e.preventDefault();
+                    const element = editBtn.closest('[data-id]');
+                    const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                    const config = modalConfigs[configKey];
+                    if (config && config.read) {
+                        const id = parseInt(element.dataset.id, 10);
+                        const values = config.read(element);
+                        openModal(config, true, { id, values });
+                    }
+                } else if (deleteBtn) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to delete this item?')) {
+                        const element = deleteBtn.closest('[data-id]');
+                        const configKey = element.closest('.tab-pane').querySelector('.primary-btn[id]').id;
+                        const config = modalConfigs[configKey];
+                        const id = parseInt(element.dataset.id, 10);
+                        
+                        db[config.dbKey] = db[config.dbKey].filter(item => item.id !== id);
+                        saveDb();
+                        renderAllData();
+                    }
+                }
+            });
+
+            // --- Form Submission Handler ---
+            modalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!currentConfig) return;
+
+                const formData = {};
+                let allFieldsValid = true;
+                currentConfig.fields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (!input.value && input.required) {
+                        allFieldsValid = false;
+                    }
+                    formData[field.id] = input.value;
+                });
+
+                if (!allFieldsValid) {
+                    alert('Please fill out all required fields.');
+                    return;
+                }
+
+                if (editingItem) {
+                    // Update mode
+                    const itemIndex = db[currentConfig.dbKey].findIndex(item => item.id === editingItem.id);
+                    if (itemIndex > -1) {
+                        db[currentConfig.dbKey][itemIndex] = { ...db[currentConfig.dbKey][itemIndex], ...formData };
+                    }
+                } else {
+                    // Add mode
+                    const newId = Date.now(); // Simple unique ID
+                    const newItem = { id: newId, ...formData };
+                    db[currentConfig.dbKey].push(newItem);
+                }
+
+                saveDb();
+                renderAllData();
+                closeModal();
+            });
+
+            // Initial data load
+            loadDb();
+            renderAllData();
+        });
+    </script>
+</body>
+</html>
